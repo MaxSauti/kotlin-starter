@@ -27,13 +27,33 @@ class HikeReportPrinter {
         println()
     }
 
-    fun printWeather(weather: WeatherConditions) {}
+    fun printWeather(weather: WeatherConditions) {
+        println("Wettergrundlage: ")
+        println("  Höchsttemperatur: " + weather.maximumTemperatureCelsius + " °C")
+        println("  Regenwahrscheinlichkeit: " + weather.rainProbabilityPercent + " %")
+        println("  Erwarteter Niederschlag: " + weather.precipitationMillimeters + " mm")
+        println("  Maximale Windböen: " + weather.maximumWindGustKmh + " km/h")
+    }
 
-    fun printRoutes(routes: List<HikingRoute>) {}
+    fun printRoutes(routes: List<HikingRoute>) {
+        var index = 0
+        for (route in routes) {
+            println("Option " + (index++) + ":")
+            println("  Name: " + route.name)
+            println("  Distanz: " + rounded(route.profile.distanceKm) + " km")
+            println("  Höhengewinn: " + route.profile.elevationGainMeters + " m")
+            println("  Schwierigkeit: " + categoryDescription(route.profile.category))
+        }
+    }
 
-    fun categoryDescription(category: RouteCategory) {}
+    fun categoryDescription(category: RouteCategory) = when (category) {
+        RouteCategory.GREEN -> "🟢 GREEN – leicht, entspannte Wanderung"
+        RouteCategory.BLUE -> "🔵 BLUE – moderat, etwas Kondition nötig"
+        RouteCategory.RED -> "🔴 RED – anspruchsvoll, gute Kondition"
+        else -> "⚫ BLACK – sehr anspruchsvoll / lange Bergtour"
+    }
 
-    fun displayList(values: List<String>) {}
+    fun displayList(values: List<String>) = if (values.isEmpty()) "keine" else values.joinToString(", ")
 
     fun rounded(value: Double) = round(value * 10.0) / 10.0
 }

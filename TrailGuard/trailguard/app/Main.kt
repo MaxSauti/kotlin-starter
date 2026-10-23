@@ -4,6 +4,7 @@ import trailguard.model.ExperienceLevel
 import trailguard.model.Hiker
 import trailguard.model.HikingGroup
 import trailguard.model.Location
+import trailguard.service.WeatherService
 import trailguard.weather.OpenMeteoClient
 
 fun main() {
@@ -16,6 +17,8 @@ fun main() {
     list.add(hiker)
     val group = HikingGroup("Hikers", list, true)
     println(group.name + " " + group.hikers + " " + group.premiumCustomer)
+
+    val ws = WeatherService()
 
 
     // ================================================================
