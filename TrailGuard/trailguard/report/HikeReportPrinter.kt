@@ -17,7 +17,7 @@ class HikeReportPrinter {
         result.weather?.let { printWeather(it) }
             ?: run {
                 println("Wettergrundlage : null")
-                result.routeOptions.clear()
+                //result.routeOptions.clear()
             }
 
         println("Kleidungsempfehlung: " + displayList(result.requiredClothing))

@@ -14,12 +14,16 @@ class PlanningService(val weatherService: WeatherService, val recommendationServ
 
     fun planRoutes(group: HikingGroup, routeWish: RouteWish): PlanningResult {
         val result = createInitialResult(group, routeWish)
-        val weather = weatherService.getWeather(routeWish.location) ?: return result
+        val weather = weatherService.getWeather(routeWish.location) ?: run {
+            result.routeOptions.clear()
+            return result
+        }
         return finishPlanning(result, group, weather)
     }
 
     fun createInitialResult(group: HikingGroup, routeWish: RouteWish): PlanningResult {
         val result = PlanningResult(group, routeWish)
+        //if (weatherService.getWeather(routeWish.location) == null) return result
         val requestedCategory = difficultyService.calculateCategory(routeWish.distanceKm, routeWish.elevationGainMeters)
         result.addRouteOption(HikingRoute(routeWish.name, routeWish.location, routeWish.distanceKm, routeWish.elevationGainMeters, requestedCategory))
         return result
