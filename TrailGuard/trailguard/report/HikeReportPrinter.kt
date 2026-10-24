@@ -15,7 +15,10 @@ class HikeReportPrinter {
         println("Gewünschter Höhengewinn: " + result.routeWish.elevationGainMeters + " m")
 
         result.weather?.let { printWeather(it) }
-            ?: { println("Wettergrundlage : null") }
+            ?: run {
+                println("Wettergrundlage : null")
+                result.routeOptions.clear()
+            }
 
         println("Kleidungsempfehlung: " + displayList(result.requiredClothing))
         println("Wetterhinweise: " + displayList(result.warnings))
@@ -36,7 +39,7 @@ class HikeReportPrinter {
     }
 
     fun printRoutes(routes: List<HikingRoute>) {
-        var index = 0
+        var index = 1
         for (route in routes) {
             println("Option " + (index++) + ":")
             println("  Name: " + route.name)
