@@ -6,20 +6,15 @@ import trailguard.model.HikingGroup
 import trailguard.model.Location
 import trailguard.service.WeatherService
 import trailguard.weather.OpenMeteoClient
+import trailguard.model.RouteWish
+import trailguard.report.HikeReportPrinter
+import trailguard.service.PlanningService
+import trailguard.service.RouteDifficultyService
+import trailguard.service.WeatherRecommendationService
 
 fun main() {
     // Zeigt, dass die vorgegebene technische Wetteranbindung funktioniert.
     val weather = OpenMeteoClient.loadWeather(Location("Steinfurt, Germany"))
-    val hiker = Hiker("Hans", ExperienceLevel.EXPERIENCED)
-    println(hiker.name + " " + hiker.experience)
-
-    val list: MutableList<Hiker> = mutableListOf()
-    list.add(hiker)
-    val group = HikingGroup("Hikers", list, true)
-    println(group.name + " " + group.hikers + " " + group.premiumCustomer)
-
-    val ws = WeatherService()
-
 
     // ================================================================
     // Sobald Hiker, HikingGroup, ExperienceLevel, RouteWish, RouteCategory,
@@ -27,14 +22,14 @@ fun main() {
     // auskommentieren (inkl. der zugehörigen Importe) und die Szenarien
     // hier aufrufen.
     // ================================================================
-    // erbilStartScenario()
-    // bergenStartScenario()
-    // sanJuanStartScenario()
-    // funchalStartScenario()
-    // bug01PremiumRoutesScenario()
-    // bug02WeatherFailureScenario()
-    // bug03MixedGroupScenario()
-    // change01ChangedRainRuleScenario()
+     erbilStartScenario()
+     bergenStartScenario()
+     sanJuanStartScenario()
+     funchalStartScenario()
+     bug01PremiumRoutesScenario()
+     bug02WeatherFailureScenario()
+     bug03MixedGroupScenario()
+     change01ChangedRainRuleScenario()
 }
 
 // ====================================================================
@@ -42,16 +37,9 @@ fun main() {
 // exakt den dort beschriebenen Start- und Ticket-Szenarien. Sobald eure
 // Modelle und Services stehen, entfernt die Kommentarzeichen und ergänzt
 // oben:
-//
-// import trailguard.model.ExperienceLevel
-// import trailguard.model.Hiker
-// import trailguard.model.HikingGroup
-// import trailguard.model.RouteWish
-// import trailguard.report.HikeReportPrinter
-// import trailguard.report.PlanningService
 // ====================================================================
 
-/*
+
 private fun erbilStartScenario() {
     printScenario("Startbeispiel 1: Irak-Route bei möglicherweise großer Hitze")
     val group = HikingGroup(
@@ -246,12 +234,14 @@ private fun change01ChangedRainRuleScenario() {
 
 private fun computeAndPrint(group: HikingGroup, routeWish: RouteWish) {
     try {
-        HikeReportPrinter.print(PlanningService().planRoute(group, routeWish))
+        HikeReportPrinter().print(PlanningService(WeatherService(), WeatherRecommendationService(),
+            RouteDifficultyService()).planRoutes(group, routeWish))
+        //HikeReportPrinter.print(PlanningService.planRoute(group, routeWish))
     } catch (e: RuntimeException) {
         println("Route kann nicht berechnet werden: ${e.message}")
     }
 }
-*/
+
 
 private fun printScenario(title: String) {
     println("============================================================")
