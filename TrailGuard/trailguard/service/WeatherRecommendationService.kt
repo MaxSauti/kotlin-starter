@@ -1,12 +1,14 @@
 package trailguard.service
 
+import trailguard.constants.PRECIPITATION_MAX
+import trailguard.constants.RAIN_MAX
 import trailguard.model.WeatherConditions
 import trailguard.model.WeatherRecommendation
 
 class WeatherRecommendationService {
     fun createRecommendation(weather: WeatherConditions): WeatherRecommendation {
         val recommendation = WeatherRecommendation()
-        if (weather.rainProbabilityPercent >= 80 || weather.precipitationMillimeters >= 20) {
+        if (weather.rainProbabilityPercent >= RAIN_MAX || weather.precipitationMillimeters >= PRECIPITATION_MAX) {
             recommendation.addRequiredClothing("Regenjacke")
             recommendation.addWarning("Regen: Routen mit mehr als 700 Höhenmetern entfallen")
         }

@@ -1,5 +1,7 @@
 package trailguard.service
 
+import trailguard.constants.PRECIPITATION_MAX
+import trailguard.constants.RAIN_MAX
 import trailguard.model.ExperienceLevel
 import trailguard.model.HikingGroup
 import trailguard.model.HikingRoute
@@ -88,7 +90,7 @@ class PlanningService(val weatherService: WeatherService, val recommendationServ
     }
 
     fun filterAllowedRoutes(routes: List<HikingRoute>, groupLimit: RouteCategory, weather: WeatherConditions): List<HikingRoute> {
-        val relevantRain = weather.rainProbabilityPercent >= 80 || weather.precipitationMillimeters >= 20
+        val relevantRain = weather.rainProbabilityPercent >= RAIN_MAX || weather.precipitationMillimeters >= PRECIPITATION_MAX
         return routes.filter { route ->
             val profile = route.profile
             val allowedForGroup = categoryValue(profile.category) <= categoryValue(groupLimit)
@@ -104,7 +106,7 @@ class PlanningService(val weatherService: WeatherService, val recommendationServ
 
     fun isPremiumRouteDisallowed(route: HikingRoute, groupLimit: RouteCategory, weather: WeatherConditions) = when {
         categoryValue(route.profile.category) > categoryValue(groupLimit) -> true
-        (weather.rainProbabilityPercent >= 80 || weather.precipitationMillimeters >= 20)
+        (weather.rainProbabilityPercent >= RAIN_MAX || weather.precipitationMillimeters >= PRECIPITATION_MAX)
                 && route.profile.elevationGainMeters > 700 -> true
         weather.maximumTemperatureCelsius >= 30
                 && (route.profile.category == RouteCategory.BLACK || route.profile.distanceKm > 27) -> true
