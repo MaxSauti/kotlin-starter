@@ -33,12 +33,12 @@ class PlanningService(val weatherService: WeatherService, val recommendationServ
         val recommendation = recommendationService.createRecommendation(weather)
         val requestedRoute = result.routeOptions.first()
         val groupLimit = maximumCategoryForGroup(group)
-        result.addRouteOption(createLongerRoute(requestedRoute, groupLimit, weather, true, false))
-        result.addRouteOption(createLongerRoute(requestedRoute, groupLimit, weather, false, false))
+        result.addRouteOption(createRoute(requestedRoute, groupLimit, weather, true, false))
+        result.addRouteOption(createRoute(requestedRoute, groupLimit, weather, false, false))
 
         if (group.premiumCustomer) {
-            result.addRouteOption(createLongerRoute(requestedRoute, groupLimit, weather, true, true))
-            result.addRouteOption(createLongerRoute(requestedRoute, groupLimit, weather, false, true))
+            result.addRouteOption(createRoute(requestedRoute, groupLimit, weather, true, true))
+            result.addRouteOption(createRoute(requestedRoute, groupLimit, weather, false, true))
         }
 
         result.replaceRouteOptions(filterAllowedRoutes(result.routeOptions, groupLimit, weather))
@@ -46,7 +46,7 @@ class PlanningService(val weatherService: WeatherService, val recommendationServ
         return result
     }
 
-    fun createLongerRoute(requestedRoute: HikingRoute, groupLimit: RouteCategory, weather: WeatherConditions, longer: Boolean, premium: Boolean): HikingRoute {
+    fun createRoute(requestedRoute: HikingRoute, groupLimit: RouteCategory, weather: WeatherConditions, longer: Boolean, premium: Boolean): HikingRoute {
         var distanceFac = 0.6
         var elevationFac = 0.3
         var description = " – Kürzer und deutlich leichter"
@@ -104,7 +104,7 @@ class PlanningService(val weatherService: WeatherService, val recommendationServ
     }
 */
     fun findRoutes(premiumRoute: HikingRoute, groupLimit: RouteCategory, weather: WeatherConditions): HikingRoute {
-        while(isPremiumRouteDisallowed(premiumRoute, groupLimit, weather)) {
+        while(isPremiumRouteAllowed(premiumRoute, groupLimit, weather)) {
             val adjustedDistance = premiumRoute.profile.distanceKm * 0.95
             val adjustedElevation = (premiumRoute.profile.elevationGainMeters * 0.95).toInt()
             premiumRoute.profile.distanceKm = adjustedDistance
@@ -129,7 +129,7 @@ class PlanningService(val weatherService: WeatherService, val recommendationServ
         }
     }
 
-    fun isPremiumRouteDisallowed(route: HikingRoute, groupLimit: RouteCategory, weather: WeatherConditions) = when {
+    fun isPremiumRouteAllowed(route: HikingRoute, groupLimit: RouteCategory, weather: WeatherConditions) = when {
         categoryValue(route.profile.category) > categoryValue(groupLimit) -> true
         (weather.rainProbabilityPercent >= RAIN_MAX || weather.precipitationMillimeters >= PRECIPITATION_MAX)
                 && route.profile.elevationGainMeters > 700 -> true
