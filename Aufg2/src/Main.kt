@@ -16,89 +16,213 @@ fun main() {
     val note3 = Note("BWL", 1.0)
     val note4 = Note("EidI", 5.0)
 
-    println("Füge 3 Einträge hinzu")
-    println(map.put(student1, note1))
-    println(map.put(student2, note2))
-    println(map.put(student3, note3))
+    println("=== put() ===")
 
-    println(map.containsKey(student1))
+    testeMethode(
+        "put(student1, note1)",
+        null,
+        map.put(student1, note1)
+    )
 
-    println(map.containsValue(note2))
+    testeMethode(
+        "put(student2, note2)",
+        null,
+        map.put(student2, note2)
+    )
 
-    println(map.get(student3))
-
-    println(map.put(student1, note4))
-
-    println("remove student2")
-    println(map.remove(student2))
+    testeMethode(
+        "put(student3, note3)",
+        null,
+        map.put(student3, note3)
+    )
 
     printMap(map)
 
-    println("putAll student4 to note4")
+    println("\n=== containsKey() ===")
+
+    testeMethode(
+        "containsKey(student1)",
+        true,
+        map.containsKey(student1)
+    )
+
+    println("\n=== containsValue() ===")
+
+    testeMethode(
+        "containsValue(note2)",
+        true,
+        map.containsValue(note2)
+    )
+
+    println("\n=== get() ===")
+
+    testeMethode(
+        "get(student3)",
+        note3,
+        map.get(student3)
+    )
+
+    println("\n=== put() vorhandenen Key ersetzen ===")
+
+    testeMethode(
+        "put(student1, note4)",
+        note1,
+        map.put(student1, note4)
+    )
+
+    printMap(map)
+
+    println("\n=== remove() ===")
+
+    testeMethode(
+        "remove(student2)",
+        note2,
+        map.remove(student2)
+    )
+
+    printMap(map)
+
+    println("\n=== putAll() ===")
+
     map.putAll(mapOf(student4 to note4))
 
     printMap(map)
 
-    println("Min: ${map.getMin()}")
-    println("Max: ${map.getMax()}")
+    println("\n=== getMin() ===")
 
-    println("\nKey-View")
-    println("removeAll student1")
-    println(map.keys.removeAll(listOf(student1)))
-    printMap(map)
-    println("Füge 3 Einträge hinzu")
-    println(map.put(student1, note1))
-    println(map.put(student2, note2))
-    println(map.put(student3, note3))
-    println("retainAll student1, student3")
-    println(map.keys.retainAll(listOf(student1, student3)))
+    testeMethode(
+        "getMin()",
+        note3,
+        map.getMin()
+    )
+
+    println("\n=== getMax() ===")
+
+    testeMethode(
+        "getMax()",
+        note4,
+        map.getMax()
+    )
+
+    println("\n=== KeyView.removeAll() ===")
+
+    testeMethode(
+        "keys.removeAll(student1)",
+        true,
+        map.keys.removeAll(listOf(student1))
+    )
+
     printMap(map)
 
-    println("\nValue-View")
-    println("remove note1")
-    println(map.values.remove(note1))
+    map.put(student1, note1)
+
+    println("\n=== KeyView.retainAll() ===")
+
+    testeMethode(
+        "keys.retainAll(student1, student3)",
+        true,
+        map.keys.retainAll(listOf(student1, student3))
+    )
+
     printMap(map)
-    println(map.put(student1, note1))
-    println(map.put(student2, note2))
-    println(map.put(student3, note3))
-    println("removeAll note2")
-    println(map.values.removeAll(listOf(note2)))
-    printMap(map)
+
     map.put(student2, note2)
-    println(map.values.retainAll(listOf(note1, note2)))
+    map.put(student4, note4)
+
+    println("\n=== ValueView.remove() ===")
+
+    testeMethode(
+        "values.remove(note1)",
+        true,
+        map.values.remove(note1)
+    )
+
     printMap(map)
 
-    println("\nEntry-View")
+    map.put(student1, note1)
+
+    println("\n=== ValueView.removeAll() ===")
+
+    testeMethode(
+        "values.removeAll(note2)",
+        true,
+        map.values.removeAll(listOf(note2))
+    )
+
+    printMap(map)
+
+    map.put(student2, note2)
+
+    println("\n=== ValueView.retainAll() ===")
+
+    testeMethode(
+        "values.retainAll(note1, note2)",
+        true,
+        map.values.retainAll(listOf(note1, note2))
+    )
+
+    printMap(map)
+
+    println("\n=== EntryView.add() ===")
+
     val entry1 = object : MutableMap.MutableEntry<Student, Note> {
-            override val key = student4
-            override var value = note4
+        override val key = student4
+        override var value = note4
 
-            override fun setValue(newValue: Note): Note {
-                val old = value
-                value = newValue
-                return old
-            }
+        override fun setValue(newValue: Note): Note {
+            val old = value
+            value = newValue
+            return old
         }
+    }
 
-    println(map.entries.add(entry1))
+    testeMethode(
+        "entries.add(entry1)",
+        true,
+        map.entries.add(entry1)
+    )
+
     printMap(map)
+
+    println("\n=== EntryView.addAll() ===")
 
     val entry2 = object : MutableMap.MutableEntry<Student, Note> {
-            override val key = Student(10, "Max")
-            override var value = Note("Physik", 1.7)
+        override val key = Student(10, "Max")
+        override var value = Note("Physik", 1.7)
 
-            override fun setValue(newValue: Note): Note {
-                val old = value
-                value = newValue
-                return old
-            }
+        override fun setValue(newValue: Note): Note {
+            val old = value
+            value = newValue
+            return old
         }
+    }
 
-    println(map.entries.addAll(listOf(entry2)))
+    testeMethode(
+        "entries.addAll(entry2)",
+        true,
+        map.entries.addAll(listOf(entry2))
+    )
+
     printMap(map)
 }
 
+fun testeMethode(
+    beschreibung: String,
+    erwartet: Any?,
+    erhalten: Any?
+) {
+    if (erwartet == erhalten) {
+        println("✓ $beschreibung")
+    } else {
+        println("✗ $beschreibung")
+        println("  Erwartet: $erwartet")
+        println("  Erhalten: $erhalten")
+    }
+}
+
 fun printMap(map: ExtendedMap<Student, Note>) {
+    println("Aktuelle Map:")
+
     for ((student, note) in map) {
         println("$student -> $note")
     }
